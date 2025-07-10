@@ -19,9 +19,7 @@ The backend logic, OTP storage, rate-limiting, and history tracking are all impl
 - 🔑 Manual Entry of base32 secrets
 - 🕒 TOTP-based 6-digit OTP generation every 30 seconds
 - 📋 Dashboard to manage services and codes
-- 📂 Password/Secret versioning with rollback
 - 🧭 Auto-suggestion of service names
-- 📈 Brute-force protection and access logs
 
 ---
 
@@ -31,7 +29,6 @@ The backend logic, OTP storage, rate-limiting, and history tracking are all impl
 - HTML5
 - CSS3
 - JavaScript
-- html5-qrcode (for client-side QR scanning)
 
 ### Backend:
 - Python with Flask
