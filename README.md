@@ -32,8 +32,6 @@ The backend logic, OTP storage, rate-limiting, and history tracking are all impl
 
 ### Backend:
 - Python with Flask
-- `pyotp` for RFC-compliant TOTP generation
-- `Werkzeug` for password hashing
 
 ---
 
