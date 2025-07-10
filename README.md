@@ -65,28 +65,26 @@ The backend logic, OTP storage, rate-limiting, and history tracking are all impl
 ---
 ## 📂 Project Structure
 
-The project follows a modular structure with separate directories for authentication, DSA utilities, static files, and HTML templates.
-'''
+The project follows a modular structure with separate directories for authentication, DSA utilities, static files, and HTML templates.  
 SecureAuth/  
-├── auth/ # Authentication logic folder  
-│ ├── login.py # Login functionality  
-│ └── signup.py # Signup functionality  
+├─ auth/ # Authentication logic folder  
+│ ├─ login.py # Login functionality  
+│ └─ signup.py # Signup functionality  
 │  
-├── dsa/ # Custom DSA implementations  
-│ ├── hashmap.py # Example: custom hashmap used in logic  
-│ └── other_classes.py # Other DSA-based utility classes  
+├─ dsa/ # Custom DSA implementations  
+│ ├─ hashmap.py # Example: custom hashmap used in logic  
+│ └─ other_classes.py # Other DSA-based utility classes  
 │  
-├── static/ # CSS and static assets  
-│ └── style.css  
+├─ static/ # CSS and static assets  
+│ └─ style.css  
 │  
-├── templates/ # HTML templates rendered by Flask  
-│ ├── dashboard.html # Main dashboard for features  
-│ ├── login.html # Login page UI  
-│ └── signup.html # Signup page UI  
+├─ templates/ # HTML templates rendered by Flask  
+│ ├─ dashboard.html # Main dashboard for features  
+│ ├─ login.html # Login page UI  
+│ └─ signup.html # Signup page UI  
 │  
-├── app.py # Main Flask application entry point  
-└── README.md # Project documentation  
-'''
+├─ app.py # Main Flask application entry point  
+└─ README.md # Project documentation  
 
 ---
 
