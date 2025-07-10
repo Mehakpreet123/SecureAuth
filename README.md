@@ -95,7 +95,7 @@ The upcoming release of SecureAuth will introduce a **Vault Module**, making it 
 ## 📌 How to Run Locally
 
 1. Clone the repository:
-git clone https://github.com/yourusername/secureauth.git
+git clone https://github.com/Mehakpreet123/secureauth.git
 2. Navigate to the project folder:
 cd SecureAuth
 3. Install dependencies:
