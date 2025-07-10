@@ -73,15 +73,15 @@ SecureAuth/
 │
 ├── dsa/ # Custom DSA implementations
 │ ├── hashmap.py # Example: custom hashmap used in logic
-│ └──Other classes
+│ └── other_classes.py # Other DSA-based utility classes
 │
 ├── static/ # CSS and static assets
 │ └── style.css
 │
 ├── templates/ # HTML templates rendered by Flask
-│ ├── dashboard.html # for each feature
-│ ├── login.html
-│ └── signup.html
+│ ├── dashboard.html # Main dashboard for features
+│ ├── login.html # Login page UI
+│ └── signup.html # Signup page UI
 │
 ├── app.py # Main Flask application entry point
 
