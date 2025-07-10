@@ -63,6 +63,29 @@ The backend logic, OTP storage, rate-limiting, and history tracking are all impl
 | **OTP Expiry Management** | Circular Queue / Min-Heap | Manage rolling 30s windows and expired codes |
 
 ---
+## 📂 Project Structure
+
+The project follows a modular structure with separate directories for authentication, DSA utilities, static files, and HTML templates.
+SecureAuth/
+├── auth/ # Authentication logic folder
+│ ├── login.py # Login functionality
+│ └── signup.py # Signup functionality
+│
+├── dsa/ # Custom DSA implementations
+│ ├── hashmap.py # Example: custom hashmap used in logic
+│ └──Other classes
+│
+├── static/ # CSS and static assets
+│ └── style.css
+│
+├── templates/ # HTML templates rendered by Flask
+│ ├── dashboard.html # for each feature
+│ ├── login.html
+│ └── signup.html
+│
+├── app.py # Main Flask application entry point
+
+---
 
 ## 🔮 Future Scope
 
