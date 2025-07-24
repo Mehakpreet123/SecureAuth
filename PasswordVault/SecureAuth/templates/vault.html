@@ -1,0 +1,26 @@
+
+{% block content %}
+<h3>Password Vault</h3>
+
+<form action="{{ url_for('vault.add') }}" method="post">
+  <input name="service" placeholder="Service name" required>
+  <input name="password" placeholder="Password (blank = auto)">
+  <button type="submit">Save</button>
+</form>
+
+<ul>
+  {% for s in services %}
+    <li>{{ s }} <button onclick="pw('{{ s }}')">Show</button></li>
+  {% else %}
+    <em>No credentials yet</em>
+  {% endfor %}
+</ul>
+
+<script>
+  async function pw(svc){
+    const r = await fetch(`/vault/password/${svc}`);
+    const d = await r.json();
+    alert(`${svc}: ${d.password}`);
+  }
+</script>
+{% endblock %}
