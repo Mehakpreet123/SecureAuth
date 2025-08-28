@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>File Vault</title>
+</head>
+<body>
+    <h2>🔐 Secure File Vault</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+        <input type="file" name="file" required>
+        <button type="submit">Upload & Encrypt</button>
+    </form>
+
+    <h3>Stored Files</h3>
+    <ul>
+        {% for f in files %}
+            <li>{{ f }} 
+                <a href="{{ url_for('decrypt', filename=f) }}">Decrypt & Download</a>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
