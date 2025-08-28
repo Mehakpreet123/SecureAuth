@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SecureAuth Home</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Floating background animation */
+    body::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.05), transparent 70%),
+                  radial-gradient(circle at 70% 70%, rgba(255,255,255,0.05), transparent 70%);
+      animation: floatBG 20s linear infinite;
+      z-index: 0;
+    }
+
+    @keyframes floatBG {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 50px 60px;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      animation: fadeIn 1s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      font-size: 36px;
+      margin-bottom: 40px;
+      color: #fff;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.4);
+    }
+
+    a.button {
+      display: inline-block;
+      padding: 16px 36px;
+      margin: 12px;
+      background: linear-gradient(135deg, #4CAF50, #81C784);
+      color: white;
+      text-decoration: none;
+      border-radius: 12px;
+      font-size: 20px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+    }
+
+    a.button:hover {
+      background: linear-gradient(135deg, #43a047, #66bb6a);
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.35);
+    }
+
+    a.button:active {
+      transform: translateY(0) scale(0.98);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+    }
+
+    @media(max-width: 600px) {
+      .container {
+        padding: 35px 25px;
+      }
+      h1 {
+        font-size: 28px;
+      }
+      a.button {
+        padding: 14px 28px;
+        font-size: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Welcome to SecureAuth</h1>
+    <a href="{{ url_for('auth.login') }}" class="button">Login</a>
+    <a href="{{ url_for('auth.signup') }}" class="button">Signup</a>
+  </div>
+
+</body>
+</html>

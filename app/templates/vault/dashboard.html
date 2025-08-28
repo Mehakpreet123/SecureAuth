@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Your Vault | SecureAuth</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #6f42c1, #4CAF50);
+      min-height: 100vh;
+      color: #fff;
+    }
+
+    /* Navbar */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255,255,255,0.15);
+      padding: 15px 25px;
+      border-radius: 0 0 20px 20px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    }
+    .navbar .brand {
+      font-size: 24px;
+      font-weight: bold;
+      color: #fff;
+    }
+    .navbar .user-info {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+    .navbar .user-info span {
+      font-weight: 500;
+    }
+    .navbar .user-info form button {
+      padding: 6px 14px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: #e63946;
+      color: white;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+    .navbar .user-info form button:hover {
+      background-color: #d62828;
+    }
+
+    /* Vault Container */
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 25px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 20px;
+      box-shadow: 0 12px 25px rgba(0,0,0,0.2);
+      backdrop-filter: blur(15px);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 28px;
+      color: #fff;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+    }
+
+    .btn-row {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-bottom: 30px;
+    }
+
+    .btn-row a {
+      padding: 10px 20px;
+      border-radius: 12px;
+      font-weight: bold;
+      color: white;
+      text-decoration: none;
+      transition: transform 0.2s ease, background-color 0.3s ease;
+    }
+    .btn-row a:hover { transform: translateY(-3px); }
+    .add-btn { background-color: #4CAF50; }
+    .add-btn:hover { background-color: #45a049; }
+    .shared-btn { background-color: #6f42c1; }
+    .shared-btn:hover { background-color: #563d7c; }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      background: rgba(255,255,255,0.15);
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      flex-wrap: wrap;
+      color: #fff;
+    }
+
+    li:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    }
+
+    .title-info strong { font-size: 18px; }
+    .title-info span { font-size: 14px; color: #f0f0f0; }
+
+    .view-link {
+      color: #fff;
+      font-weight: 500;
+      text-decoration: underline;
+      margin-left: 10px;
+    }
+
+    form button {
+      background: none;
+      border: none;
+      color: #ff6b6b;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    form button:hover { color: #e63946; }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="brand">🔒 SecureAuth Vault</div>
+    <div class="user-info">
+      <span>{{ session['email'] }}</span>
+      <form action="{{ url_for('auth.logout') }}" method="POST">
+        <button type="submit">Logout</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Flash Messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="container mt-3">
+      {% for category, message in messages %}
+        <div class="alert alert-{{ 'danger' if category=='error' else 'success' }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+
+  <!-- Vault Container -->
+  <div class="container">
+    <h2>Your Vault</h2>
+
+    <div class="btn-row">
+      <a class="add-btn" href="{{ url_for('vault.add_credential') }}">+ Add New</a>
+      <a class="shared-btn" href="{{ url_for('sharing.shared_vaults') }}">🔑 Shared With Me</a>
+      <a class="shared-btn" href="{{ url_for('sharing.shared_sent') }}">📤 Shared by Me</a>
+    </div>
+
+    <ul>
+      {% for c in credentials %}
+      <li>
+        <div class="title-info">
+          <strong>{{ c.title }}</strong>
+          <span>{{ c.website }}</span>
+        </div>
+        <div>
+          <a class="view-link" href="{{ url_for('vault.view_credential', vault_id=c.vault_id) }}">View</a> |
+          <a class="view-link" href="{{ url_for('vault.edit_credential', vault_id=c.vault_id) }}">Edit</a> |
+          <form action="{{ url_for('vault.delete_credential', vault_id=c.vault_id) }}" method="POST" style="display:inline;">
+            <button type="submit" onclick="return confirm('Are you sure you want to delete this?')">Delete</button>
+          </form> |
+          <a class="view-link" href="{{ url_for('sharing.share_page', vault_id=c.vault_id) }}">Share</a>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <!-- Bootstrap JS for dismissable alerts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

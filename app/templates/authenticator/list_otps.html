@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Current OTPs | SecureAuth</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding-top: 80px;
+      background: linear-gradient(135deg, #6f42c1, #4CAF50);
+      min-height: 100vh;
+      color: #fff;
+    }
+
+    /* Navbar */
+    .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(0,0,0,0.25);
+      color: #fff;
+      z-index: 1000;
+      padding: 12px 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom-left-radius: 15px;
+      border-bottom-right-radius: 15px;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+    }
+    .navbar .brand {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    .navbar .user-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .navbar .user-info span { font-size: 0.95rem; }
+    .navbar .user-info form button {
+      padding: 6px 14px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: #e63946;
+      font-weight: bold;
+      color: #fff;
+      transition: background 0.3s;
+    }
+    .navbar .user-info form button:hover { background-color: #d62828; }
+
+    /* OTP container */
+    .otp-container {
+      max-width: 800px;
+      margin: 0 auto 60px auto;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-weight: 600;
+      font-size: 2rem;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+    }
+
+    /* OTP cards */
+    .otp-card {
+      margin-bottom: 15px;
+      padding: 20px;
+      border-radius: 15px;
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      color: #fff;
+    }
+    .otp-card:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(0,0,0,0.3); }
+
+    .otp-value {
+      font-weight: bold;
+      font-size: 1.2rem;
+      padding: 8px 12px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #ff7f50, #ffb347);
+      color: #fff;
+    }
+
+    .copy-btn {
+      transition: background-color 0.3s;
+    }
+    .copy-btn:hover { background-color: rgba(255,255,255,0.2); }
+
+    .add-button {
+      margin-top: 25px;
+      text-align: center;
+    }
+    .add-button a {
+      padding: 12px 25px;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #fff;
+      background: #4CAF50;
+      text-decoration: none;
+      transition: transform 0.2s, background-color 0.3s;
+    }
+    .add-button a:hover { background: #45a049; transform: translateY(-2px); }
+
+    .text-muted { color: rgba(255,255,255,0.7) !important; }
+
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="brand">⏱️ SecureAuth Authenticator</div>
+    <div class="user-info">
+      <span>{{ session.get('email', 'Guest') }}</span>
+      <form action="{{ url_for('auth.logout') }}" method="POST">
+        <button type="submit">Logout</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- OTP Container -->
+  <div class="container otp-container">
+    <h2>Current OTPs</h2>
+
+    <div id="otp-list">
+      {% if otps %}
+        <div class="list-group">
+          {% for otp in otps %}
+            <div class="list-group-item otp-card" data-id="{{ otp.otp_secret_id }}">
+              <div>
+                <strong>{{ otp.label }}</strong><br>
+                <span class="text-muted small">Expires in <span class="timer">30</span>s</span>
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <span class="otp-value">{{ otp.otp }}</span>
+                <button class="btn btn-sm btn-outline-light copy-btn" title="Copy OTP">Copy</button>
+                <form action="{{ url_for('authenticator.delete_otp', otp_id=otp.otp_secret_id) }}" method="POST" style="margin: 0;">
+                  <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this OTP?')">Delete</button>
+                </form>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="alert alert-light text-center">No OTPs added yet.</div>
+      {% endif %}
+    </div>
+
+    <div class="add-button">
+      <a href="{{ url_for('authenticator.add_third_party') }}">+ Add Another OTP</a>
+    </div>
+  </div>
+
+  <script>
+    // Copy OTP
+    document.querySelectorAll('.copy-btn').forEach(button => {
+      button.addEventListener('click', () => {
+        const otpValue = button.parentElement.querySelector('.otp-value').innerText;
+        navigator.clipboard.writeText(otpValue).then(() => {
+          button.innerText = 'Copied!';
+          setTimeout(() => button.innerText = 'Copy', 1500);
+        });
+      });
+    });
+
+    // Countdown timer
+    let timer = 30;
+    const updateTimers = () => {
+      document.querySelectorAll('.timer').forEach(el => el.innerText = timer);
+    };
+
+    setInterval(() => {
+      timer--;
+      if (timer <= 0) { fetchOTPs(); timer = 30; }
+      updateTimers();
+    }, 1000);
+
+    function fetchOTPs() {
+      fetch('{{ url_for("authenticator.get_otps_json") }}')
+        .then(res => res.json())
+        .then(data => {
+          const list = document.querySelector('#otp-list .list-group');
+          list.innerHTML = '';
+          data.forEach(otp => {
+            list.innerHTML += `
+              <div class="list-group-item otp-card" data-id="${otp.otp_secret_id}">
+                <div>
+                  <strong>${otp.label}</strong><br>
+                  <span class="text-muted small">Expires in <span class="timer">30</span>s</span>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                  <span class="otp-value">${otp.otp}</span>
+                  <button class="btn btn-sm btn-outline-light copy-btn" title="Copy OTP">Copy</button>
+                  <form action="/authenticator/delete/${otp.otp_secret_id}" method="POST" style="margin:0;">
+                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this OTP?')">Delete</button>
+                  </form>
+                </div>
+              </div>
+            `;
+          });
+
+          document.querySelectorAll('.copy-btn').forEach(button => {
+            button.addEventListener('click', () => {
+              const otpValue = button.parentElement.querySelector('.otp-value').innerText;
+              navigator.clipboard.writeText(otpValue).then(() => {
+                button.innerText = 'Copied!';
+                setTimeout(() => button.innerText = 'Copy', 1500);
+              });
+            });
+          });
+        });
+    }
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

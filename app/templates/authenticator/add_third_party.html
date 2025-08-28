@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add 3rd Party Authenticator | SecureAuth</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #6f42c1, #4CAF50);
+      color: #fff;
+    }
+
+    .auth-form {
+      max-width: 500px;
+      width: 90%;
+      padding: 30px;
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      color: #fff;
+    }
+
+    h2 {
+      text-align: center;
+      font-weight: 700;
+      font-size: 2rem;
+      margin-bottom: 25px;
+      text-shadow: 1px 1px 4px rgba(0,0,0,0.5);
+    }
+
+    .form-label {
+      font-weight: 500;
+    }
+
+    input.form-control {
+      border-radius: 10px;
+      padding: 12px;
+      border: none;
+      background: rgba(255,255,255,0.2);
+      color: #fff;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+      transition: background 0.3s, box-shadow 0.3s;
+    }
+    input.form-control:focus {
+      background: rgba(255,255,255,0.3);
+      box-shadow: 0 0 8px rgba(255,255,255,0.5);
+      outline: none;
+      color: #fff;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #4CAF50, #6f42c1);
+      border: none;
+      font-weight: bold;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 1.1rem;
+      transition: transform 0.2s, filter 0.3s;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.1);
+    }
+
+    .alert-danger {
+      background: rgba(255, 0, 0, 0.3);
+      border: none;
+      color: #fff;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    }
+
+    @media(max-width: 576px) {
+      .auth-form {
+        padding: 25px 20px;
+      }
+      h2 { font-size: 1.7rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="auth-form">
+    <h2>🔑 Add Raw Secret</h2>
+
+    {% if error %}
+      <div class="alert alert-danger text-center">
+        {{ error }}
+      </div>
+    {% endif %}
+
+    <form method="POST">
+      <div class="mb-3">
+        <label for="input_value" class="form-label">Enter otpauth URI or Secret:</label>
+        <input type="text" name="input_value" id="input_value" class="form-control" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="label" class="form-label">Label (required if providing raw secret):</label>
+        <input type="text" name="label" id="label" class="form-control">
+      </div>
+
+      <div class="d-grid">
+        <input type="submit" value="Add OTP" class="btn btn-primary">
+      </div>
+    </form>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
