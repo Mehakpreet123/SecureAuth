@@ -96,8 +96,7 @@ This ensures that sensitive documents remain confidential and accessible only wi
 
 ---
 
-## 📌 Future Improvements
-- Multi-factor authentication (MFA)  
+## 📌 Future Improvements 
 - Cloud storage integration for File Vault  
 - Secure file sharing  
 - Browser extension enhancements (auto-save, sync)  
