@@ -21,6 +21,13 @@ def signup():
         conn = get_connection()
         cursor = conn.cursor()
 
+        cursor.execute("SELECT * FROM users WHERE username=%s", (username,))
+        if cursor.fetchone():
+            flash("Username exists. Choose other")
+            cursor.close()
+            conn.close()
+            return redirect("/signup")
+        
         # Check if email already exists
         cursor.execute("SELECT * FROM users WHERE email=%s", (email,))
         if cursor.fetchone():

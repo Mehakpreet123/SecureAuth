@@ -13,12 +13,13 @@ def create_app():
     # ✅ Enable CORS with credentials
     CORS(app, supports_credentials=True)
 
-    from .routes import auth, vault,authenticator,pass_sharing
+    from .routes import auth, vault,authenticator,pass_sharing,fileVault
     app.register_blueprint(auth.bp)
     app.register_blueprint(mainpage.bp)
     app.register_blueprint(vault.bp)
     app.register_blueprint(authenticator.authenticator_bp)
     app.register_blueprint(pass_sharing.bp)
+    app.register_blueprint(fileVault.bp)
 
 
 

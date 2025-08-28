@@ -145,4 +145,21 @@ def unpack_share_token(token_json, private_key):
 
     return plaintext.decode()
 
+from Crypto.Cipher import AES
+from Crypto.Protocol.KDF import PBKDF2
+import os
 
+
+def encrypt_file(file_data, password, salt):
+    key = PBKDF2(password, salt, dkLen=32, count=100000)
+    cipher = AES.new(key, AES.MODE_GCM)
+    ciphertext, tag = cipher.encrypt_and_digest(file_data)
+    return cipher.nonce + tag + ciphertext
+
+def decrypt_file(enc_data, password, salt):
+    key = PBKDF2(password, salt, dkLen=32, count=100000)
+    nonce = enc_data[:16]
+    tag = enc_data[16:32]
+    ciphertext = enc_data[32:]
+    cipher = AES.new(key, AES.MODE_GCM, nonce=nonce)
+    return cipher.decrypt_and_verify(ciphertext,tag)
