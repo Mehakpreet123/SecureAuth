@@ -1,128 +1,104 @@
-# 🔐 SecureAuth – DSA-Powered Web-Based TOTP Authenticator
+# 🔒 SecureAuth
 
-SecureAuth is a full-stack, browser-based authenticator application that allows users to securely manage their Two-Factor Authentication (2FA) tokens using Time-Based One-Time Passwords (TOTP). What makes SecureAuth unique is its **core foundation in Data Structures and Algorithms (DSA)** — every feature, from OTP handling to credential management, is designed using efficient and scalable DSA techniques.
-
----
-
-## 📌 Project Description
-
-SecureAuth replicates the functionality of authenticators like Google Authenticator but is fully web-based. It supports scanning QR codes, entering base32 secrets, and generating valid 6-digit OTPs that update every 30 seconds.
-
-The backend logic, OTP storage, rate-limiting, and history tracking are all implemented using appropriate **DSA components** — making it both secure and educational for demonstrating how DSA powers real-world systems.
+SecureAuth is a **three-phase security platform** designed to provide **user authentication**, **secure password management with sharing**, and **file encryption & storage**.  
+It ensures **end-to-end encryption** and provides a seamless, secure experience for managing sensitive data.
 
 ---
 
-## ✅ Key Features
-
-- 🔐 User Registration and Login
-- 📷 QR Code Scanning (In-Browser)
-- 🔑 Manual Entry of base32 secrets
-- 🕒 TOTP-based 6-digit OTP generation every 30 seconds
-- 📋 Dashboard to manage services and codes
-- 🧭 Auto-suggestion of service names
+## 🚀 Features
+- User authentication using a time-based one-time password (TOTP) system for third-party app logins
+- Secure Password Vault with encryption
+- Password sharing (with **browser extension support**)
+- Encrypted File Vault for safe file storage
+- AES + RSA hybrid cryptography for password & file security
 
 ---
 
-## 🧱 Tech Stack
+## 📂 Project Phases
 
-### Frontend:
-- HTML5
-- CSS3
-- JavaScript
+### **Phase 1 – Authenticator**
+The **Authenticator** module provides secure **user registration and login**.  
+- Users create accounts with email & password.  
+- Passwords are stored using **bcrypt hashing**.  
+- Public/private RSA key pairs are generated for each user.  
+- After login, the Authenticator generates time-based one-time passwords (TOTP) for access to other connected apps. 
 
-### Backend:
-- Python with Flask
-
----
-
-## 🔁 Application Workflow
-
-1. User visits SecureAuth and signs up or logs in.
-2. On the dashboard, user clicks “Add New Entry”.
-3. User either:
-   - Scans a QR code from a third-party service, or
-   - Manually enters the base32 secret and service name.
-4. SecureAuth extracts and stores the TOTP secret securely.
-5. A 6-digit OTP is generated every 30 seconds using TOTP logic.
-6. The user can copy the OTP and use it for two-factor authentication.
-7. System manages OTP expiry, logs activity, and ensures rate limits.
+This phase ensures only **authenticated users** can access the Vaults.
 
 ---
 
-## 🧠 DSA Logic & Algorithms Used
+### **Phase 2 – Password Vault & Sharing**
+The **Password Vault** allows users to store, retrieve, and manage credentials securely.  
+- Passwords are **AES-encrypted** before being stored in the database.  
+- Decryption keys are derived from the user’s private key.  
+- A clean dashboard shows saved credentials with auto-login support.
 
-| Feature | DSA/Algorithm Used | Purpose |
-|--------|---------------------|---------|
-| **User Authentication** | Hash Map (Dictionary) | Fast username-password mapping for login/signup |
-| **OTP Generation** | TOTP (RFC 6238), Time-based HMAC | Secure, rolling one-time passwords |
-| **Secret Versioning** | Stack | Push/pop previous secrets, rollback on update |
-| **Brute Force Prevention** | Queue + Sliding Window | Track login attempts per time interval |
-| **Access Logs** | Deque (Double-ended Queue) | Log recent user activities efficiently |
-| **Service Auto-Suggest** | Trie | Fast prefix-based service name suggestions |
-| **Secret Validation** | Regex + String Matching | Validate base32 formats from QR or manual input |
-| **OTP Expiry Management** | Circular Queue / Min-Heap | Manage rolling 30s windows and expired codes |
+🔑 **Password Sharing**:
+- Users can securely **share credentials** with other users.  
+- Shared passwords are encrypted with an **AES session key**, which is wrapped with the **receiver’s RSA public key**.  
+- The receiver decrypts it using their private key.  
+- Sharing includes:
+  - **Send & Receive shared credentials**  
+  - **Revoke or delete shared credentials**  
 
----
-## 📂 Project Structure
-
-The project follows a modular structure with separate directories for authentication, DSA utilities, static files, and HTML templates.  
-SecureAuth/  
-├─ auth/ # Authentication logic folder  
-│ ├─ login.py # Login functionality  
-│ └─ signup.py # Signup functionality  
-│  
-├─ dsa/ # Custom DSA implementations  
-│ ├─ hashmap.py # Example: custom hashmap used in logic  
-│ └─ other_classes.py # Other DSA-based utility classes  
-│  
-├─ static/ # CSS and static assets  
-│ └─ style.css  
-│  
-├─ templates/ # HTML templates rendered by Flask  
-│ ├─ dashboard.html # Main dashboard for features  
-│ ├─ login.html # Login page UI  
-│ └─ signup.html # Signup page UI  
-│  
-├─ app.py # Main Flask application entry point  
-└─ README.md # Project documentation  
+🌐 **Browser Extension Support**:  
+For seamless usage, a **browser extension** is integrated to auto-fill shared credentials, making secure collaboration easier.
 
 ---
 
-## 🔮 Future Scope
+### **Phase 3 – File Vault**
+The **File Vault** provides secure file upload, encryption, and download.  
+- Files are encrypted using **AES-GCM with PBKDF2-derived keys**.  
+- Encrypted files are stored in the database.  
+- To download, users must enter the correct encryption password.  
+- Features:
+  - Upload & Encrypt files
+  - Decrypt & Download files
+  - Delete stored files  
 
-The upcoming release of SecureAuth will introduce a **Vault Module**, making it a full-fledged security suite. Features of the Vault include:
-
-### 🔐 Secure Password Vault (Planned)
-
-- Store and retrieve passwords for multiple services
-- Encrypt passwords using strong symmetric encryption (e.g., AES)
-- Generate random strong passwords with constraints
-- Version control for passwords using a stack
-- Search through stored credentials using Trie
-- Access logs for viewing history of access/edit
-- Optional PIN or biometric-based unlock (browser-supported)
-
-**DSA Used in Vault Module:**
-
-| Feature | DSA Used | Description |
-|--------|----------|-------------|
-| Password History | Stack | Undo/rollback support for password updates |
-| Credential Lookup | Trie | Fast search by service/domain |
-| Secure Mapping | Hash Map | `user_id → {service → credentials}` |
-| Password Strength Check | String Analysis | Pattern matching, dictionary lookups |
-| Activity Tracking | Deque | Logging of all interactions with vault |
+This ensures that sensitive documents remain confidential and accessible only with the right credentials.
 
 ---
 
-## 📌 How to Run Locally
+## 🛠️ Tech Stack
+- **Backend**: Python (Flask)  
+- **Database**: MySQL (Workbench for schema design)  
+- **Cryptography**: AES-GCM, RSA, PBKDF2, bcrypt  
+- **Frontend**: HTML5, CSS3, Bootstrap 5, Glassmorphism design  
+- **Browser Extension**: Integrated for password sharing auto-fill  
 
-1. Clone the repository:
-git clone https://github.com/Mehakpreet123/secureauth.git
-2. Navigate to the project folder:
-cd SecureAuth
-3. Install dependencies:
-pip install -r requirements.txt
-4. Run the application:
-python app.py
-5. Open your browser and go to:
-http://localhost:5000
+---
+
+## ⚡ Setup & Run
+
+1. Clone repository:
+   ```bash
+   git clone https://github.com/your-repo/SecureAuth.git
+   cd SecureAuth
+   ```
+
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. Configure database in `app/db.py` and initialize schema via Workbench.
+
+4. Run Flask app:
+   ```bash
+   flask run
+   ```
+
+5. Open in browser:
+   ```
+   http://127.0.0.1:5000
+   ```
+
+---
+
+## 📌 Future Improvements
+- Multi-factor authentication (MFA)  
+- Cloud storage integration for File Vault  
+- Secure file sharing  
+- Browser extension enhancements (auto-save, sync)  
+- Audit logs for password sharing  
